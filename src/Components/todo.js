@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Checkbox,
   IconButton,
@@ -16,9 +16,10 @@ import { Delete, PostAdd } from "@mui/icons-material";
 import PageContainer from "./Layouts/PageContainer";
 import { TodoService } from "../API/services";
 
-const todos = [{ id: 1, isDone: false, title: "Do stuff" }];
 const TodoList = () => {
+  const [todos, setTodos] = useState({});
   const [text, setText] = useState("");
+  const { data = [] } = todos;
 
   const addTodo = () => {
     TodoService.create({ title: text }).then(
@@ -26,6 +27,10 @@ const TodoList = () => {
       (error) => console.log("Error in creating todo: ", error)
     );
   };
+
+  useEffect(() => {
+    TodoService.find().then(res => setTodos(res));
+  }, [])
 
   return (
     <PageContainer>
@@ -57,14 +62,14 @@ const TodoList = () => {
           />
         </Paper>
         <Paper
-          hidden={!todos.length}
+          hidden={!data.length}
           style={{
             margin: "0.5rem 0rem 0.5rem",
             padding: "0.25rem 0.25rem 0rem",
           }}
         >
           <List>
-            {todos.map(({ id, isDone, title }) => (
+            {data.map(({ id, isDone, title }) => (
               <ListItem
                 key={id}
                 button
