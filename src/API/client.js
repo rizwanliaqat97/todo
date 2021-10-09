@@ -5,8 +5,14 @@ import socket from './socketio';
 
 const client = feathers()
 client.configure(socketio(socket, { timeout: 30000 }));
-client.configure(auth());
 
-client.service("users").on('created', user => console.log("User created: ", user));
+client.configure(auth({ storage: window.localStorage }));
+
+client.service("todos").hooks({
+    async before(context) {
+        await client.authenticate();
+        return context
+    }
+})
 
 export default client;

@@ -27,10 +27,42 @@ const TodoList = () => {
       (error) => console.log("Error in creating todo: ", error)
     );
   };
+  const updateTodo = (_id, data) => {
+    TodoService.patch(_id, data).catch((error) =>
+      console.log("Error in updating todo: ", error)
+    );
+  };
+  const removeTodo = (_id) => {
+    TodoService.remove(_id).catch((error) =>
+      console.log("Error in removing todo: ", error)
+    );
+  };
 
   useEffect(() => {
-    TodoService.find().then(res => setTodos(res));
-  }, [])
+    TodoService.find().then((res) => setTodos(res));
+  }, []);
+
+  useEffect(() => {
+    const handleCreate = (todo) => {
+      setTodos((old) => ({ ...old, data: [todo, ...old.data] }));
+    };
+    const handlePatched = (todo) => {
+      setTodos((old) => ({
+        ...old,
+        data: old.data.map((item) => (item._id !== todo._id ? item : todo)),
+      }));
+    };
+    const handleRemoved = (todo) => {
+      setTodos((old) => ({
+        ...old,
+        data: old.data.filter((item) => item._id !== todo._id),
+      }));
+    };
+
+    TodoService.on("created", handleCreate);
+    TodoService.on("patched", handlePatched);
+    TodoService.on("removed", handleRemoved);
+  }, []);
 
   return (
     <PageContainer>
@@ -69,18 +101,18 @@ const TodoList = () => {
           }}
         >
           <List>
-            {data.map(({ id, isDone, title }) => (
+            {data.map(({ _id, isDone, title }) => (
               <ListItem
-                key={id}
+                key={_id}
                 button
                 divider
-              // onClick={(e) => updateState(id, !isDone)}
+                onClick={(e) => updateTodo(_id, { isDone: !isDone })}
               >
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
                     checked={isDone}
-                  // onChange={() => updateState(id, !isDone)}
+                    onChange={() => updateTodo(_id, !isDone)}
                   />
                 </ListItemIcon>
                 <ListItemText primary={title} />
@@ -88,7 +120,7 @@ const TodoList = () => {
                   <IconButton
                     edge="end"
                     aria-label="comments"
-                  // onClick={() => doRemoveTodo(id)}
+                    onClick={() => removeTodo(_id)}
                   >
                     <Delete />
                   </IconButton>
