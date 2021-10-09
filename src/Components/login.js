@@ -9,33 +9,18 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import React, { useState } from 'react';
 import PageContainer from './Layouts/PageContainer';
-
-// const useStyles = makeStyles((theme) => ({
-//   main: {
-//     backgroundImage: 'linear-gradient(transparent 50%,blue 50%, blue)',
-//     flexGrow: 1,
-//     display: 'flex',
-//     flexDirection: 'column',
-//     alignItems: 'center',
-//   },
-//   paper: {
-//     width: '35%',
-//     [theme.breakpoints.down('md')]: { width: '50%' },
-//     [theme.breakpoints.down('sm')]: { width: '95%' },
-//     margin: 'auto',
-//     padding: theme.spacing(4),
-//     boxSizing: 'border-box',
-//   },
-//   formFields: {
-//     margin: '1rem auto',
-//   },
-// }));
+import { login } from "../API/auth";
 
 const Login = () => {
   const [passwordVisible, togglePasswordVisibility] = useState(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    const username = e.target.elements.username.value;
+    const password = e.target.elements.password.value;
+
+    login({ username, password });
   };
+
   return (
     <PageContainer>
       <div style={{
