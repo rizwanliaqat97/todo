@@ -1,14 +1,29 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRouter from "./Router";
+import Navbar from "./Components/Layouts/navbar";
+import reportWebVitals from "./reportWebVitals";
+import { AppContextWrapper } from "./AppContext";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <AppContextWrapper>
+        <Router>
+          <Navbar ap="good" />
+          <AppRouter />
+        </Router>
+      </AppContextWrapper>
+    </QueryClientProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
