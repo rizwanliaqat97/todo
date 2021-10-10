@@ -23,17 +23,12 @@ import { useQuery, useQueryClient } from "react-query";
 const TodoList = () => {
   const queryClient = useQueryClient();
   const [text, setText] = useState("");
-  const [editId, setEditId] = useState("");
   const [message, setMessage] = useState({
     text: "",
     open: false,
     severity: "warning",
   });
 
-  const edit = (todo) => {
-    setEditId(todo._id);
-    setText(todo.title);
-  };
   const addTodo = () => {
     TodoService.create({ title: text }).then(
       (res) => {
@@ -129,7 +124,7 @@ const TodoList = () => {
           >
             <List>
               {data.map(({ _id, isDone, title }) => (
-                <ListItem key={_id} button onClick={() => edit({ _id, title })}>
+                <ListItem key={_id}>
                   <ListItemIcon>
                     <Checkbox
                       edge="start"
@@ -137,19 +132,7 @@ const TodoList = () => {
                       onChange={() => updateTodo(_id, { isDone: !isDone })}
                     />
                   </ListItemIcon>
-                  {editId === _id ? (
-                    <InputBase
-                      placeholder="What you want to do?"
-                      value={text}
-                      onKeyPress={(e) =>
-                        e.code === "Enter" ? addTodo() : null
-                      }
-                      onChange={(e) => setText(e.target.value)}
-                      fullWidth
-                    />
-                  ) : (
-                    <ListItemText primary={title} />
-                  )}
+                  <ListItemText primary={title} />
                   <ListItemSecondaryAction>
                     <IconButton
                       edge="end"
