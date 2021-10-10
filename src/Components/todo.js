@@ -39,7 +39,10 @@ const TodoList = () => {
   };
 
   useEffect(() => {
-    TodoService.find().then((res) => setTodos(res));
+    TodoService.find().then(
+      (res) => setTodos(res),
+      (error) => console.log("Error in fetching todos: ", error)
+    );
   }, []);
 
   useEffect(() => {

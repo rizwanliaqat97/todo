@@ -7,11 +7,14 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import React, { useState } from 'react';
-import PageContainer from './Layouts/PageContainer';
+import React, { useContext, useState } from "react";
+import PageContainer from "./Layouts/PageContainer";
 import { login } from "../API/auth";
+import AppContext from "../AppContext";
+import { Redirect } from "react-router-dom";
 
 const Login = () => {
+  const appContext = useContext(AppContext);
   const [passwordVisible, togglePasswordVisibility] = useState(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -21,21 +24,30 @@ const Login = () => {
     login({ username, password });
   };
 
+  if (appContext.isLoggedIn) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <PageContainer>
-      <div style={{
-        backgroundImage: 'linear-gradient(transparent 50%,blue 50%, blue)',
-        flexGrow: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}>
-        <Paper elevation={6} style={{
-          width: '35%',
-          margin: 'auto',
-          padding: '1rem',
-          boxSizing: 'border-box',
-        }}>
+      <div
+        style={{
+          backgroundImage: "linear-gradient(transparent 50%,blue 50%, blue)",
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Paper
+          elevation={6}
+          style={{
+            width: "35%",
+            margin: "auto",
+            padding: "1rem",
+            boxSizing: "border-box",
+          }}
+        >
           <Typography variant="h5" gutterBottom>
             Log in
           </Typography>
@@ -45,7 +57,7 @@ const Login = () => {
               label="Username or email"
               variant="filled"
               style={{
-                margin: '1rem auto',
+                margin: "1rem auto",
               }}
               fullWidth
               autoFocus
@@ -56,7 +68,7 @@ const Login = () => {
               variant="filled"
               fullWidth
               InputProps={{
-                type: passwordVisible ? 'text' : 'password',
+                type: passwordVisible ? "text" : "password",
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
@@ -69,7 +81,7 @@ const Login = () => {
                 ),
               }}
               style={{
-                margin: '1rem auto',
+                margin: "1rem auto",
               }}
             />
             <Button type="submit">Log in</Button>

@@ -1,19 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import { BrowserRouter as Router } from 'react-router-dom';
-import AppRouter from './Router';
-import Navbar from './Components/Layouts/navbar'
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRouter from "./Router";
+import Navbar from "./Components/Layouts/navbar";
+import reportWebVitals from "./reportWebVitals";
+import { AppContextWrapper } from "./AppContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Navbar ap="good" />
-      <AppRouter />
-    </Router>
+    <AppContextWrapper>
+      <Router>
+        <Navbar ap="good" />
+        <AppRouter />
+      </Router>
+    </AppContextWrapper>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
