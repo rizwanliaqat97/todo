@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Checkbox,
   IconButton,
@@ -11,15 +11,22 @@ import {
   Paper,
   ListItemSecondaryAction,
   Container,
+  Snackbar,
+  Alert,
+  Slide,
 } from "@mui/material";
 import { Delete, PostAdd } from "@mui/icons-material";
 import PageContainer from "./Layouts/PageContainer";
 import { TodoService } from "../API/services";
+import { useQuery } from "react-query";
 
 const TodoList = () => {
-  const [todos, setTodos] = useState({});
   const [text, setText] = useState("");
-  const { data = [] } = todos;
+  const [message, setMessage] = useState({
+    text: "",
+    open: false,
+    severity: "warning",
+  });
 
   const addTodo = () => {
     TodoService.create({ title: text }).then(
@@ -37,103 +44,120 @@ const TodoList = () => {
       console.log("Error in removing todo: ", error)
     );
   };
+  const fetchQueries = () => TodoService.find();
 
-  useEffect(() => {
-    TodoService.find().then(
-      (res) => setTodos(res),
-      (error) => console.log("Error in fetching todos: ", error)
-    );
-  }, []);
+  const { data: todos = {} } = useQuery("todos", fetchQueries, {
+    onError: (e) =>
+      setMessage({
+        open: true,
+        text: "Could not fetch todos",
+        severity: "error",
+      }),
+  });
+  const { data = [] } = todos;
 
-  useEffect(() => {
-    const handleCreate = (todo) => {
-      setTodos((old) => ({ ...old, data: [todo, ...old.data] }));
-    };
-    const handlePatched = (todo) => {
-      setTodos((old) => ({
-        ...old,
-        data: old.data.map((item) => (item._id !== todo._id ? item : todo)),
-      }));
-    };
-    const handleRemoved = (todo) => {
-      setTodos((old) => ({
-        ...old,
-        data: old.data.filter((item) => item._id !== todo._id),
-      }));
-    };
+  // useEffect(() => {
+  //   const handleCreate = (todo) => {
+  //     setTodos((old) => ({ ...old, data: [todo, ...old.data] }));
+  //   };
+  //   const handlePatched = (todo) => {
+  //     setTodos((old) => ({
+  //       ...old,
+  //       data: old.data.map((item) => (item._id !== todo._id ? item : todo)),
+  //     }));
+  //   };
+  //   const handleRemoved = (todo) => {
+  //     setTodos((old) => ({
+  //       ...old,
+  //       data: old.data.filter((item) => item._id !== todo._id),
+  //     }));
+  //   };
 
-    TodoService.on("created", handleCreate);
-    TodoService.on("patched", handlePatched);
-    TodoService.on("removed", handleRemoved);
-  }, []);
+  //   TodoService.on("created", handleCreate);
+  //   TodoService.on("patched", handlePatched);
+  //   TodoService.on("removed", handleRemoved);
+  // }, []);
 
   return (
-    <PageContainer>
-      <Container
-        disableGutters
-        style={{
-          width: "60%",
-          margin: "auto",
-        }}
-      >
-        <Paper
+    <>
+      <PageContainer>
+        <Container
+          disableGutters
           style={{
-            padding: "0.25rem 0.5rem",
+            width: "60%",
+            margin: "auto",
           }}
         >
-          <InputBase
-            placeholder="What you want to do?"
-            endAdornment={
-              <InputAdornment position="end" onClick={addTodo}>
-                <IconButton edge="end">
-                  <PostAdd />
-                </IconButton>
-              </InputAdornment>
-            }
-            value={text}
-            onKeyPress={(e) => (e.code === "Enter" ? addTodo() : null)}
-            onChange={(e) => setText(e.target.value)}
-            fullWidth
-          />
-        </Paper>
-        <Paper
-          hidden={!data.length}
-          style={{
-            margin: "0.5rem 0rem 0.5rem",
-            padding: "0.25rem 0.25rem 0rem",
-          }}
-        >
-          <List>
-            {data.map(({ _id, isDone, title }) => (
-              <ListItem
-                key={_id}
-                button
-                divider
-                onClick={(e) => updateTodo(_id, { isDone: !isDone })}
-              >
-                <ListItemIcon>
-                  <Checkbox
-                    edge="start"
-                    checked={isDone}
-                    onChange={() => updateTodo(_id, !isDone)}
-                  />
-                </ListItemIcon>
-                <ListItemText primary={title} />
-                <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    aria-label="comments"
-                    onClick={() => removeTodo(_id)}
-                  >
-                    <Delete />
+          <Paper
+            style={{
+              padding: "0.25rem 0.5rem",
+            }}
+          >
+            <InputBase
+              placeholder="What you want to do?"
+              endAdornment={
+                <InputAdornment position="end" onClick={addTodo}>
+                  <IconButton edge="end">
+                    <PostAdd />
                   </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
-      </Container>
-    </PageContainer>
+                </InputAdornment>
+              }
+              value={text}
+              onKeyPress={(e) => (e.code === "Enter" ? addTodo() : null)}
+              onChange={(e) => setText(e.target.value)}
+              fullWidth
+            />
+          </Paper>
+          <Paper
+            hidden={!data.length}
+            style={{
+              margin: "0.5rem 0rem 0.5rem",
+              padding: "0.25rem 0.25rem 0rem",
+            }}
+          >
+            <List>
+              {data.map(({ _id, isDone, title }) => (
+                <ListItem
+                  key={_id}
+                  button
+                  divider
+                  onClick={(e) => updateTodo(_id, { isDone: !isDone })}
+                >
+                  <ListItemIcon>
+                    <Checkbox
+                      edge="start"
+                      checked={isDone}
+                      onChange={() => updateTodo(_id, !isDone)}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={title} />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="comments"
+                      onClick={() => removeTodo(_id)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+        </Container>
+      </PageContainer>
+
+      <Snackbar
+        autoHideDuration={2000}
+        open={message.open}
+        onClose={() => setMessage((old) => ({ ...old, open: false }))}
+        TransitionComponent={Slide}
+      >
+        <Alert severity={message.severity} elevation={6} variant="filled">
+          {message.text}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

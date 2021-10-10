@@ -6,15 +6,22 @@ import AppRouter from "./Router";
 import Navbar from "./Components/Layouts/navbar";
 import reportWebVitals from "./reportWebVitals";
 import { AppContextWrapper } from "./AppContext";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false } },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppContextWrapper>
-      <Router>
-        <Navbar ap="good" />
-        <AppRouter />
-      </Router>
-    </AppContextWrapper>
+    <QueryClientProvider client={queryClient}>
+      <AppContextWrapper>
+        <Router>
+          <Navbar ap="good" />
+          <AppRouter />
+        </Router>
+      </AppContextWrapper>
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
