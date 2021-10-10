@@ -81,7 +81,7 @@ const TodoList = () => {
           <InputBase
             placeholder="What you want to do?"
             endAdornment={
-              <InputAdornment position="end">
+              <InputAdornment position="end" onClick={addTodo}>
                 <IconButton edge="end">
                   <PostAdd />
                 </IconButton>
