@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Checkbox,
   IconButton,
@@ -18,19 +18,28 @@ import {
 import { Delete, PostAdd } from "@mui/icons-material";
 import PageContainer from "./Layouts/PageContainer";
 import { TodoService } from "../API/services";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 const TodoList = () => {
+  const queryClient = useQueryClient();
   const [text, setText] = useState("");
+  const [editId, setEditId] = useState("");
   const [message, setMessage] = useState({
     text: "",
     open: false,
     severity: "warning",
   });
 
+  const edit = (todo) => {
+    setEditId(todo._id);
+    setText(todo.title);
+  };
   const addTodo = () => {
     TodoService.create({ title: text }).then(
-      (res) => console.log("Todo created: ", res),
+      (res) => {
+        setText("");
+        console.log("Todo created: ", res);
+      },
       (error) => console.log("Error in creating todo: ", error)
     );
   };
@@ -56,27 +65,30 @@ const TodoList = () => {
   });
   const { data = [] } = todos;
 
-  // useEffect(() => {
-  //   const handleCreate = (todo) => {
-  //     setTodos((old) => ({ ...old, data: [todo, ...old.data] }));
-  //   };
-  //   const handlePatched = (todo) => {
-  //     setTodos((old) => ({
-  //       ...old,
-  //       data: old.data.map((item) => (item._id !== todo._id ? item : todo)),
-  //     }));
-  //   };
-  //   const handleRemoved = (todo) => {
-  //     setTodos((old) => ({
-  //       ...old,
-  //       data: old.data.filter((item) => item._id !== todo._id),
-  //     }));
-  //   };
+  useEffect(() => {
+    const handleCreate = (todo) => {
+      queryClient.setQueryData("todos", (old) => ({
+        ...old,
+        data: [todo, ...old.data],
+      }));
+    };
+    const handlePatched = (todo) => {
+      queryClient.setQueryData("todos", (old) => ({
+        ...old,
+        data: old.data.map((item) => (item._id !== todo._id ? item : todo)),
+      }));
+    };
+    const handleRemoved = (todo) => {
+      queryClient.setQueryData("todos", (old) => ({
+        ...old,
+        data: old.data.filter((item) => item._id !== todo._id),
+      }));
+    };
 
-  //   TodoService.on("created", handleCreate);
-  //   TodoService.on("patched", handlePatched);
-  //   TodoService.on("removed", handleRemoved);
-  // }, []);
+    TodoService.on("created", handleCreate);
+    TodoService.on("patched", handlePatched);
+    TodoService.on("removed", handleRemoved);
+  }, [queryClient]);
 
   return (
     <>
@@ -85,12 +97,12 @@ const TodoList = () => {
           disableGutters
           style={{
             width: "60%",
-            margin: "auto",
+            margin: "5rem auto",
           }}
         >
           <Paper
             style={{
-              padding: "0.25rem 0.5rem",
+              padding: "0.5rem",
             }}
           >
             <InputBase
@@ -117,20 +129,27 @@ const TodoList = () => {
           >
             <List>
               {data.map(({ _id, isDone, title }) => (
-                <ListItem
-                  key={_id}
-                  button
-                  divider
-                  onClick={(e) => updateTodo(_id, { isDone: !isDone })}
-                >
+                <ListItem key={_id} button onClick={() => edit({ _id, title })}>
                   <ListItemIcon>
                     <Checkbox
                       edge="start"
                       checked={isDone}
-                      onChange={() => updateTodo(_id, !isDone)}
+                      onChange={() => updateTodo(_id, { isDone: !isDone })}
                     />
                   </ListItemIcon>
-                  <ListItemText primary={title} />
+                  {editId === _id ? (
+                    <InputBase
+                      placeholder="What you want to do?"
+                      value={text}
+                      onKeyPress={(e) =>
+                        e.code === "Enter" ? addTodo() : null
+                      }
+                      onChange={(e) => setText(e.target.value)}
+                      fullWidth
+                    />
+                  ) : (
+                    <ListItemText primary={title} />
+                  )}
                   <ListItemSecondaryAction>
                     <IconButton
                       edge="end"

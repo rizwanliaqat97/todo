@@ -84,7 +84,9 @@ const Login = () => {
                 margin: "1rem auto",
               }}
             />
-            <Button type="submit">Log in</Button>
+            <Button type="submit" color="primary" variant="contained" fullWidth>
+              Log in
+            </Button>
           </form>
         </Paper>
       </div>

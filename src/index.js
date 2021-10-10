@@ -9,7 +9,7 @@ import { AppContextWrapper } from "./AppContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: false } },
+  defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
 });
 
 ReactDOM.render(
