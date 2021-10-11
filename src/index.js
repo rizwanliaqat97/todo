@@ -7,6 +7,7 @@ import Navbar from "./components/layouts/Navbar";
 import reportWebVitals from "./reportWebVitals";
 import { AppContextWrapper } from "./appContext";
 import { QueryClient, QueryClientProvider } from "react-query";
+import ErrorBoundary from "./utils/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
@@ -14,14 +15,16 @@ const queryClient = new QueryClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AppContextWrapper>
-        <Router>
-          <Navbar ap="good" />
-          <AppRouter />
-        </Router>
-      </AppContextWrapper>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AppContextWrapper>
+          <Router>
+            <Navbar ap="good" />
+            <AppRouter />
+          </Router>
+        </AppContextWrapper>
+      </QueryClientProvider>
+    </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById("root")
 );

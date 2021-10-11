@@ -29,7 +29,6 @@ const EditTodo = ({ saveBtn = false, record, onSave }) => {
   };
 
   useEffect(() => {
-    console.log("Effeting...");
     setText(record?.title || "");
   }, [record]);
 
