@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
 import { useContext } from "react";
-import AppContext from "../AppContext";
+import AppContext from "../appContext";
 import { Redirect } from "react-router-dom";
 
 const CustomRoute = ({ component: Component, requireAuth, ...rest }) => {

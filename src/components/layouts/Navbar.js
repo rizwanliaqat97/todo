@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
-import AppContext from "../../AppContext";
+import AppContext from "../../appContext";
 import { logout } from "../../API/auth";
 
 const Navbar = () => {

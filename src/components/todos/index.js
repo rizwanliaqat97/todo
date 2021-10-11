@@ -16,8 +16,8 @@ import {
   Slide,
 } from "@mui/material";
 import { Delete, PostAdd } from "@mui/icons-material";
-import PageContainer from "./Layouts/PageContainer";
-import { TodoService } from "../API/services";
+import PageContainer from "../layouts/PageContainer";
+import { TodoService } from "../../API/services";
 import { useQuery, useQueryClient } from "react-query";
 
 const TodoList = () => {

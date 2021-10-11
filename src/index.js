@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
-import AppRouter from "./Router";
-import Navbar from "./Components/Layouts/navbar";
+import AppRouter from "./router";
+import Navbar from "./components/layouts/Navbar";
 import reportWebVitals from "./reportWebVitals";
-import { AppContextWrapper } from "./AppContext";
+import { AppContextWrapper } from "./appContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient({

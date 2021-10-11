@@ -8,9 +8,9 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import React, { useContext, useState } from "react";
-import PageContainer from "./Layouts/PageContainer";
-import { login } from "../API/auth";
-import AppContext from "../AppContext";
+import PageContainer from "../layouts/PageContainer";
+import { login } from "../../API/auth";
+import AppContext from "../../appContext";
 import { Redirect } from "react-router-dom";
 
 const Login = () => {
