@@ -11,7 +11,7 @@ import React, { useContext, useState } from "react";
 import PageContainer from "../layouts/PageContainer";
 import { login } from "../../API/auth";
 import AppContext from "../../appContext";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 const Login = () => {
   const appContext = useContext(AppContext);
@@ -54,11 +54,9 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <TextField
               name="username"
-              label="Username or email"
+              label="Username or email he"
               variant="filled"
-              style={{
-                margin: "1rem auto",
-              }}
+              margin="dense"
               fullWidth
               autoFocus
             />
@@ -80,14 +78,21 @@ const Login = () => {
                   </InputAdornment>
                 ),
               }}
-              style={{
-                margin: "1rem auto",
-              }}
+              margin="dense"
             />
-            <Button type="submit" color="primary" variant="contained" fullWidth>
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              margin="dense"
+              fullWidth
+            >
               Log in
             </Button>
           </form>
+          <Typography variant="overline">
+            Don't have an account yet? <Link to="/signup">Sign up</Link>
+          </Typography>
         </Paper>
       </div>
     </PageContainer>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -16,14 +16,16 @@ const queryClient = new QueryClient({
 ReactDOM.render(
   <React.StrictMode>
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AppContextWrapper>
-          <Router>
-            <Navbar ap="good" />
-            <AppRouter />
-          </Router>
-        </AppContextWrapper>
-      </QueryClientProvider>
+      <Suspense fallback={<div style={{ marginTop: "5rem" }}>Loading...</div>}>
+        <QueryClientProvider client={queryClient}>
+          <AppContextWrapper>
+            <Router>
+              <Navbar ap="good" />
+              <AppRouter />
+            </Router>
+          </AppContextWrapper>
+        </QueryClientProvider>
+      </Suspense>
     </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById("root")
