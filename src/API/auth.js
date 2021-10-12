@@ -2,8 +2,13 @@ import client from "./client";
 import { UserService } from "./services";
 
 export const signup = (data) => {
-  UserService.create(data).then(
-    (res) => console.log("user created: ", res),
+  const { confirmPassword, ...rest } = data;
+  const { password, email } = rest;
+  UserService.create(rest).then(
+    (res) => {
+      console.log("user created: ", res);
+      login({ email, password });
+    },
     (error) => console.log("Error in creating user: ", error)
   );
 };

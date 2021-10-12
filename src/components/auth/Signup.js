@@ -28,7 +28,12 @@ const Signup = () => {
     },
     validationSchema: Yup.object({
       fullName: Yup.string().required("Full name is required"),
-      email: Yup.string().required("Email or username is required"),
+      email: Yup.string()
+        .required("Email or username is required")
+        .matches(
+          /^[\w@.)(*#$&-]*$/,
+          "Username can have letters, digits and characters like: (@ . # * $ & - _) without spaces"
+        ),
       password: Yup.string()
         .min(8, "Passwod must be at least 8 characters long")
         .required("Password is required"),
