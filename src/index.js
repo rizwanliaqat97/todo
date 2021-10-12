@@ -1,27 +1,23 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
-import AppRouter from "./Router";
-import Navbar from "./Components/Layouts/navbar";
+import AppRouter from "./router";
 import reportWebVitals from "./reportWebVitals";
-import { AppContextWrapper } from "./AppContext";
-import { QueryClient, QueryClientProvider } from "react-query";
-
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
-});
+import { AppContextWrapper } from "./appContext";
+import ErrorBoundary from "./utils/ErrorBoundary";
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AppContextWrapper>
-        <Router>
-          <Navbar ap="good" />
-          <AppRouter />
-        </Router>
-      </AppContextWrapper>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <Suspense fallback={<div style={{ marginTop: "5rem" }}>Loading...</div>}>
+        <AppContextWrapper>
+          <Router>
+            <AppRouter />
+          </Router>
+        </AppContextWrapper>
+      </Suspense>
+    </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById("root")
 );

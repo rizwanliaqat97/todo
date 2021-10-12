@@ -7,11 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
-import AppContext from "../../AppContext";
+import AppContext from "../../appContext";
 import { logout } from "../../API/auth";
 
 const Navbar = () => {
-  const { isLoggedIn } = useContext(AppContext);
+  const { isLoggedIn, user } = useContext(AppContext);
 
   return (
     <AppBar>
@@ -23,12 +23,24 @@ const Navbar = () => {
         >
           <Menu />
         </IconButton>
-        <Typography style={{ flexGrow: 1 }} variant="h6">
-          <ButtonBase href="/">Rizwan</ButtonBase>
+        <ButtonBase href="/">
+          <Typography variant="h6" fontWeight="bold">
+            {user?.fullName || user.email}
+          </Typography>
+        </ButtonBase>
+        <Typography
+          variant="h5"
+          fontFamily="monospace"
+          fontWeight="bold"
+          style={{ margin: "auto" }}
+        >
+          Todo app
         </Typography>
         {isLoggedIn ? (
           <ButtonBase color="inherit" onClick={logout}>
-            <Typography variant="button">Logout</Typography>
+            <Typography variant="button" fontWeight="bold" fontSize="small">
+              Logout
+            </Typography>
           </ButtonBase>
         ) : (
           <ButtonBase color="inherit" href="/login">
