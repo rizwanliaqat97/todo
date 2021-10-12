@@ -5,24 +5,17 @@ import { BrowserRouter as Router } from "react-router-dom";
 import AppRouter from "./router";
 import reportWebVitals from "./reportWebVitals";
 import { AppContextWrapper } from "./appContext";
-import { QueryClient, QueryClientProvider } from "react-query";
 import ErrorBoundary from "./utils/ErrorBoundary";
-
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
-});
 
 ReactDOM.render(
   <React.StrictMode>
     <ErrorBoundary>
       <Suspense fallback={<div style={{ marginTop: "5rem" }}>Loading...</div>}>
-        <QueryClientProvider client={queryClient}>
-          <AppContextWrapper>
-            <Router>
-              <AppRouter />
-            </Router>
-          </AppContextWrapper>
-        </QueryClientProvider>
+        <AppContextWrapper>
+          <Router>
+            <AppRouter />
+          </Router>
+        </AppContextWrapper>
       </Suspense>
     </ErrorBoundary>
   </React.StrictMode>,
