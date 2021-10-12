@@ -1,4 +1,8 @@
-import { Delete } from "@mui/icons-material";
+import {
+  AssignmentLateOutlined,
+  AssignmentTurnedInTwoTone,
+  Delete,
+} from "@mui/icons-material";
 import {
   Checkbox,
   IconButton,
@@ -8,6 +12,7 @@ import {
   ListItemText,
   Paper,
   ListItemSecondaryAction,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { TodoService } from "../../API/services";
@@ -48,46 +53,71 @@ const TodoList = () => {
     TodoService.on("created", handleCreate);
     TodoService.on("patched", handlePatched);
     TodoService.on("removed", handleRemoved);
+
+    return () => {
+      TodoService.off("created", handleCreate);
+      TodoService.off("patched", handlePatched);
+      TodoService.off("removed", handleRemoved);
+    };
   }, []);
 
   return (
     <Paper
-      hidden={!data.length}
       style={{
-        margin: "0.5rem 0rem 0.5rem",
-        padding: "0.25rem 0.25rem 0rem",
+        margin: "0.5rem 0rem",
       }}
     >
-      <List>
-        {data.map(({ _id, isDone, title }) => (
-          <ListItem key={_id} onClick={() => setEditingId(_id)}>
-            <ListItemIcon>
-              <Checkbox
-                edge="start"
-                checked={isDone}
-                onChange={() => updateTodo(_id, { isDone: !isDone })}
-              />
-            </ListItemIcon>
-            {editingId === _id ? (
-              <EditTodo
-                record={{ _id, isDone, title }}
-                onSave={() => setEditingId("")}
-              />
-            ) : (
-              <ListItemText primary={title} style={{ cursor: "pointer" }} />
-            )}
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                aria-label="comments"
-                onClick={() => removeTodo(_id)}
-              >
-                <Delete />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
+      {data.length > 0 ? (
+        <List>
+          {data.map(({ _id, isDone, title }) => (
+            <ListItem key={_id}>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={isDone}
+                  onChange={() => updateTodo(_id, { isDone: !isDone })}
+                />
+              </ListItemIcon>
+              {editingId === _id ? (
+                <EditTodo
+                  record={{ _id, isDone, title }}
+                  onSave={() => setEditingId("")}
+                />
+              ) : (
+                <ListItemText
+                  primary={title}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setEditingId(_id)}
+                />
+              )}
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  aria-label="comments"
+                  onClick={() => removeTodo(_id)}
+                >
+                  <Delete />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <Typography
+          variant="h5"
+          height="200px"
+          color="GrayText"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          gutterBottom
+        >
+          <AssignmentLateOutlined sx={{ fontSize: 100, display: "block" }} />
+          <div>You have not planned to do anything yet!</div>
+        </Typography>
+      )}
     </Paper>
   );
 };

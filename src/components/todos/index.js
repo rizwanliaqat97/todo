@@ -10,7 +10,7 @@ const Todos = () => (
       disableGutters
       style={{
         width: "60%",
-        margin: "5rem auto",
+        margin: "3rem auto",
       }}
     >
       <EditTodo saveBtn onSave={() => null} />
