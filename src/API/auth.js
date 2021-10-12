@@ -1,4 +1,12 @@
 import client from "./client";
+import { UserService } from "./services";
+
+export const signup = (data) => {
+  UserService.create(data).then(
+    (res) => console.log("user created: ", res),
+    (error) => console.log("Error in creating user: ", error)
+  );
+};
 
 export const login = (data) => {
   client

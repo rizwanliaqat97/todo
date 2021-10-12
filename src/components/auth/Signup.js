@@ -13,6 +13,7 @@ import AppContext from "../../appContext";
 import { Link, Redirect } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { signup } from "../../API/auth";
 
 const Signup = () => {
   const appContext = useContext(AppContext);
@@ -35,7 +36,7 @@ const Signup = () => {
         .required("Please confirm your password")
         .equals([Yup.ref("password")], "Passwords do not match"),
     }),
-    onSubmit: (values) => console.log("Form values: ", values),
+    onSubmit: signup,
   });
 
   const getFieldProps = (fieldName) => ({
