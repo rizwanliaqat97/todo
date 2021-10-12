@@ -7,8 +7,9 @@ const EditTodo = ({ saveBtn = false, record, onSave }) => {
   const { _id, ...rest } = record || {};
 
   const saveTodo = () => {
-    if (_id) {
-      TodoService.patch(_id, { ...rest, title: text }).then(
+    const title = text.trim();
+    if (_id && title) {
+      TodoService.patch(_id, { ...rest, title }).then(
         (res) => {
           setText("");
           console.log("Todo patched: ", res);
@@ -17,7 +18,7 @@ const EditTodo = ({ saveBtn = false, record, onSave }) => {
         (error) => console.log("Error in updating todo: ", error)
       );
     } else {
-      TodoService.create({ title: text }).then(
+      TodoService.create({ title }).then(
         (res) => {
           setText("");
           console.log("Todo created: ", res);
