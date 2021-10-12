@@ -11,7 +11,7 @@ import AppContext from "../../appContext";
 import { logout } from "../../API/auth";
 
 const Navbar = () => {
-  const { isLoggedIn } = useContext(AppContext);
+  const { isLoggedIn, user } = useContext(AppContext);
 
   return (
     <AppBar>
@@ -24,7 +24,7 @@ const Navbar = () => {
           <Menu />
         </IconButton>
         <Typography style={{ flexGrow: 1 }} variant="h6">
-          <ButtonBase href="/">Rizwan</ButtonBase>
+          <ButtonBase href="/">{user?.fullName || user.email}</ButtonBase>
         </Typography>
         {isLoggedIn ? (
           <ButtonBase color="inherit" onClick={logout}>
