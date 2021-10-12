@@ -12,24 +12,43 @@ import PageContainer from "../layouts/PageContainer";
 import { login } from "../../API/auth";
 import AppContext from "../../appContext";
 import { Link, Redirect } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Login = () => {
   const appContext = useContext(AppContext);
   const [passwordVisible, togglePasswordVisibility] = useState(false);
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    const username = e.target.elements.username.value;
-    const password = e.target.elements.password.value;
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().required("Email or username is required"),
+      password: Yup.string().required("Password is required"),
+    }),
+    onSubmit: login,
+  });
 
-    login({ username, password });
-  };
-
+  const getFieldProps = (fieldName) => ({
+    ...formik.getFieldProps(fieldName),
+    error: !!formik.errors[fieldName],
+    helperText: formik.errors[fieldName],
+  });
   if (appContext.isLoggedIn) {
     return <Redirect to="/" />;
   }
 
   return (
     <PageContainer>
+      <Typography
+        variant="h4"
+        fontFamily="monospace"
+        fontWeight="bold"
+        textAlign="center"
+      >
+        Todo app
+      </Typography>
       <div
         style={{
           backgroundImage: "linear-gradient(transparent 50%,blue 50%, blue)",
@@ -51,20 +70,19 @@ const Login = () => {
           <Typography variant="h5" gutterBottom>
             Log in
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={formik.handleSubmit}>
             <TextField
-              name="username"
-              label="Username or email he"
-              variant="filled"
+              name="email"
+              label="Username or email"
+              variant="outlined"
               margin="dense"
+              {...getFieldProps("email")}
               fullWidth
-              autoFocus
             />
             <TextField
               name="password"
               label="Password"
-              variant="filled"
-              fullWidth
+              variant="outlined"
               InputProps={{
                 type: passwordVisible ? "text" : "password",
                 endAdornment: (
@@ -79,12 +97,14 @@ const Login = () => {
                 ),
               }}
               margin="dense"
+              {...getFieldProps("password")}
+              fullWidth
             />
             <Button
               type="submit"
               color="primary"
               variant="contained"
-              margin="dense"
+              style={{ margin: "0.5rem auto" }}
               fullWidth
             >
               Log in

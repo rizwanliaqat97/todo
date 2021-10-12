@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import AppRouter from "./router";
-import Navbar from "./components/layouts/Navbar";
 import reportWebVitals from "./reportWebVitals";
 import { AppContextWrapper } from "./appContext";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -20,7 +19,6 @@ ReactDOM.render(
         <QueryClientProvider client={queryClient}>
           <AppContextWrapper>
             <Router>
-              <Navbar ap="good" />
               <AppRouter />
             </Router>
           </AppContextWrapper>

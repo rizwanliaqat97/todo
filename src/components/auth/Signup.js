@@ -50,6 +50,14 @@ const Signup = () => {
 
   return (
     <PageContainer>
+      <Typography
+        variant="h4"
+        fontFamily="revert"
+        fontWeight="bold"
+        textAlign="center"
+      >
+        Todo app
+      </Typography>
       <div
         style={{
           backgroundImage: "linear-gradient(transparent 50%,blue 50%, blue)",
